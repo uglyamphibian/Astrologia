@@ -231,20 +231,47 @@ def swap_key_value(dct):
     result = dict()
     for key,value in dct.items():
         if value in result:
-            result[value] = result[value].append(key)
+            if not isinstance(result[value], list):
+                result[value] = [result[value]]
+            result[value].append(key)
         else:
-            result[value] =[key]
+            result[value] = key
     return result
+
+
+def dct_to_df(dct, name):
+    """
+    convert dct to pd.series  with name
+    """
+    df0 = pd.DataFrame(index=terrestrial)
+    df1 = pd.Series(dct)
+    df1.name= name
+    df = pd.merge(left=df0, right=df1, how='left',
+                  left_index=True,right_index=True).fillna(' ')
+    return df
+
+
+def arrange_star(birth,star_dct,name):
+    """
+    根據生日決定
+    """
+    dct = choose_minor(birth, star_dct)
+    dct_swap = swap_key_value(dct)
+    df = dct_to_df(dct_swap,name)
+    return df
+
+
+
+
 
 a = {'年干':['天魁','天鉞']}
 b = {'時':['文昌','文曲']}
 c ={'月':['左輔','右弼']}
 d = {'年支':'龍池'}
 
-ex1 = life_dict['張侍郎']
-test1 = choose_minor(ex1, {**a,**b,**c})
-print(test1)
-
+ex1 = life_dict['嚴介溪']
+test1 = arrange_star(ex1, {**a,**b,**c},'吉星組合')
+ 
 
 
 
@@ -268,3 +295,5 @@ def jinx(birth):
     """
     pass
 
+
+# %%
