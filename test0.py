@@ -27,6 +27,9 @@ np_empty = np.array(empty_loc).reshape(6,10)
 empty_value = ['戌亥','申酉','午未','辰巳','寅卯','子丑']
 #VV = dict(zip(empty_value,np_empty))
 
+v = np.where(np_empty=='壬子')[0][0]
+print(v)
+
 
 #def set_empty(birth):
 #    empty_dct = {}
