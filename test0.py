@@ -1,31 +1,12 @@
 #%%
 from functions import *
 from pprint import pprint
-a = {'年干':['天魁','天鉞']}
-b = {'時':['文昌','文曲']}
-c ={'月':['左輔','右弼']}
-d = {'年支':'火星'}
+life_dict2 = pd.read_excel('basic/example.xlsx',sheet_name='其他', index_col='姓名')
+life_example2 = []
+#pprint(life_dict2.keys())
 
+#print(life_dict2['李建佑'])
 
-#pprint(sonus)
-
-
-
-
-# set_empty
-#%%
-
-
-
-
-    
-    
-
-ex1 = life_dict['楊貴妃']
-print(ex1)
-aa = empty_star(ex1)
-print(aa)
-#life_cycle(ex1, gender='F')
-
+#print(combine_star(life_dict2['俞欣榮']))
 
 
