@@ -1,6 +1,26 @@
 from info import *
 import numpy as np
 
+"""
+各函式說明
+1.reorder_dict:
+2.life_table:
+3.life_profile_loc
+4.element_attr
+5.polar_loc
+6.permute_star
+7.add_level
+8.combine_star
+9.set_day_stars(birth)
+10.choose_minor
+11.add_prop_lv
+12.swap_key_value
+13.dct_to_df
+14.permute_minor
+
+"""
+
+
 def reorder_dict(dct):
     """
     依據地支順序排列
@@ -249,3 +269,19 @@ def life_cycle(birth, gender='M'):
         
     life_dict = dict(zip(life_map,cycle))
     return life_dict
+
+
+def empty_star(birth):
+    sonus_list = list(sonus.keys())
+    empty_dict={}
+    year_full = birth[0]
+    empty_loc = []
+    for ii in sonus_list:
+        list_tmp = [ii[0:2],ii[2:]]
+        empty_loc.extend(list_tmp)
+    np_empty = np.array(empty_loc).reshape(6,10)
+    empty_value = ['戌亥','申酉','午未','辰巳','寅卯','子丑']
+    v = np.where(np_empty==year_full)[0][0]
+    loc = empty_value[v]
+    empty_dict['旬中'], empty_dict['空亡'] = loc[0], loc[1]
+    return empty_dict
