@@ -285,3 +285,32 @@ def empty_star(birth):
     loc = empty_value[v]
     empty_dict['旬中'], empty_dict['空亡'] = loc[0], loc[1]
     return empty_dict
+
+
+#  流年組合
+def flow_fortune(year):
+    """
+    year 為六十甲子
+    """
+    c_flow_star = dict(c_flow[year[0]])
+    t_flow_star = dict(t_flow[year[1]])
+    flow_stars= dict(**c_flow_star,**t_flow_star)
+    flow_stars= pd.Series(swap_key_value(flow_stars))
+    flow_stars.name = year
+    return flow_stars
+
+    
+
+def flow_table():
+    """
+    流星組合
+    """
+    sonus_list = list(sonus.keys())
+    df0 = pd.DataFrame(index=terrestrial)
+    for ii in sonus_list:
+        df_tmp = pd.concat([flow_fortune(ii[0:2]),flow_fortune(ii[2:])], 
+                        axis=1,join='outer',ignore_index=False)
+        df0= pd.concat([df0,df_tmp], axis=1, join='outer',ignore_index=False).fillna(' ') 
+    return df0 
+    
+dff= flow_table()

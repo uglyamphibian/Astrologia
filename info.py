@@ -63,4 +63,10 @@ sonus= pd.Series({
 life_profile =['*命宮*','父母','福德','田宅','*官祿*','奴僕',
                '*遷移*','疾厄','*財帛*','子女','夫妻','兄弟']
 
+c_flow = pd.read_csv('basic/c_flow_star.csv', index_col='星名')
+t_flow = pd.read_csv('basic/t_flow_star.csv', index_col='星名')
+
+#def flow_stars():
+
  
+
