@@ -2,30 +2,51 @@
 from tabulate import tabulate
 from functions import *
 from pprint import pprint
-df = pd.read_excel('basic/example.xlsx',sheet_name='其他', index_col='姓名')
-life_dct2 = {ii: df.loc[ii,:].to_list() for ii in df.index}
-#pprint(life_dct2.keys())
-#print(life_dct2['李建佑'])
-
-print(tabulate(combine_star(life_dct2['俞欣榮']),  tablefmt='psql'))
+import re
 
 
-#def flow_star():
-#    ""
-#    """
-#    pass
 
 
-# year_span
+def decade_span(birth,gender):
+    """
+    大限
+    """
+    count ={'金':4,
+            '木':3,
+            '水':2,
+            '火':6,
+            '土':5}
+    y = count[element_attr(birth)[2]]
+    span1 = np.arange(0,120,step=10)+y
+    span2 = np.arange(10,130,10)+y-1
+    life_loc =[key for key,value in life_profile_loc(birth).items() if re.search(value,'命宮')]
+    #, None)
+    #next(
+    #swap_key_value(life_profile_loc(birth))['*命宮*']
+    if gender == re.match('m', re.IGNORECASE):
+        a=1
+    else:
+        a=-1
+
+    print(life_loc)
+
+
 def annual_span(birth):
     """
     小限
     """
     pass
 
-def decade_span(birth):
+def flow_span(birth):
     """
-    大限
-    """    
-# 小限 ## (要配合流年)
-# decade_span #大限 ## (要配合流年)
+    流年
+    """
+    pass
+
+ex = life_dict['寶壇僧']
+Z = combine_star(ex)
+decade_span(ex,'m')
+#test = flow_table()['壬戌']    
+#result = pd.merge(left=Z, right=test, 
+# how='left', left_index=True, right_index=True)
+

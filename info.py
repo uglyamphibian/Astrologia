@@ -7,6 +7,8 @@ life_dict = dict()
 for jj in life_example.index:
      life_dict[jj] = life_example.loc[jj].to_list()
 
+life_example2 = pd.read_excel('basic/example.xlsx',sheet_name='其他', index_col='姓名')
+life_dct2 = {ii: life_example2.loc[ii,:].to_list() for ii in life_example2.index}
 
 #% Basic Information
 celestial = ['甲','乙','丙','丁','戊',
