@@ -1,7 +1,5 @@
 import pandas as pd
 
-
-
 # 納音
 sonus= pd.Series({
 '甲子乙丑':'海中金', '丙寅丁卯':'爐中火',
@@ -26,14 +24,12 @@ life_profile =['*命宮*','父母','福德','田宅','*官祿*','奴僕',
 celestial = ['甲','乙','丙','丁','戊',
              '己','庚','辛','壬','癸']
 
-def set_mock_caller():
-    """
-    To ensure I can call celestial and terrestrial directly
-    """
-    global celestial 
 
-    terrestrial =['子','丑','寅','卯',
+
+terrestrial =['子','丑','寅','卯',
               '辰','巳','午','未',
               '申','酉','戌','亥']
-    
 
+ 
+c_flow = pd.read_csv('basic/c_flow_star.csv', index_col='星名')
+t_flow = pd.read_csv('basic/t_flow_star.csv', index_col='星名')
