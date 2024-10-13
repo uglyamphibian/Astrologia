@@ -1,4 +1,5 @@
 from info import *
+import re
 import numpy as np
 
 """
@@ -19,7 +20,9 @@ import numpy as np
 14.permute_minor
 
 """
-
+def convert_list_br(dct):
+    y = {ii: ','.join(jj) if isinstance(jj,list) else jj for ii,jj in dct.items() }
+    return y
 
 def reorder_dict(dct):
     """
@@ -129,22 +132,6 @@ def add_level(dct):
     return star_dict 
 
  
-def combine_star(birth):
-    df0 = pd.DataFrame.from_dict(life_profile_loc(birth), orient='index').rename(columns={0:'宮位'})
-    c_star, cc_star = permute_star(birth)
-    c_star,cc_star  = add_level(c_star),add_level(cc_star)
-    total=dict()
-    for jj in set(c_star)|set(cc_star):
-        if jj in c_star and jj in cc_star:
-            total[jj] = [c_star[jj], cc_star[jj]]
-        elif jj in c_star:
-            total[jj] = c_star[jj]
-        else:
-            total[jj] = cc_star[jj]
-    df1 = pd.Series(total); 
-    df1.name  = '主星'
-    df = pd.merge(left=df0, right=df1, how='left', left_index=True, right_index=True).fillna(' ')
-    return df
 
 
 
@@ -245,6 +232,7 @@ def permute_minor(birth,star_dct,name):
     dct = choose_minor(birth, star_dct)
     new_dct = add_prop_lv(birth,dct)
     dct_swap = swap_key_value(new_dct)
+    dct_swap = convert_list_br(dct_swap)
     df = dct_to_df(dct_swap,name)
     return df
 
@@ -260,12 +248,13 @@ def life_cycle(birth, gender='M'):
     set_initial ={'金':'巳','木':'亥',
                   '水':'申','火':'寅','土':'申'}
     initial = terrestrial.index(set_initial[attr])
-    terr_new = terrestrial*2
-    if gender =='M':
-        life_map = terr_new[initial-1:initial+11]
+
+    if re.search('M', gender, re.I):
+        life_map = [ terrestrial[(initial+ii)%12]    for ii in range(12)]#terr_new[initial-1:initial+11]
     else:
-        life_map = terr_new[initial+1:initial+13]
-        life_map = [jj for jj in reversed(life_map)]
+        life_map = [ terrestrial[(initial-ii)%12]    for ii in range(12)]
+        #terr_new[initial+1:initial+13]
+        #life_map = [jj for jj in reversed(life_map)]
         
     life_dict = dict(zip(life_map,cycle))
     return life_dict
@@ -287,15 +276,19 @@ def empty_star(birth):
     return empty_dict
 
 
+
+
 #  流年組合
-def flow_fortune(year):
+def flow_star_arrange(year):
     """
     year 為六十甲子
     """
     c_flow_star = dict(c_flow[year[0]])
     t_flow_star = dict(t_flow[year[1]])
-    flow_stars= dict(**c_flow_star,**t_flow_star)
-    flow_stars= pd.Series(swap_key_value(flow_stars))
+    flow_stars0= dict(**c_flow_star,**t_flow_star)
+    flow_stars=swap_key_value(flow_stars0)
+    flow_stars = convert_list_br(flow_stars)
+    flow_stars= pd.Series(flow_stars)
     flow_stars.name = year
     return flow_stars
 
@@ -308,9 +301,40 @@ def flow_table():
     sonus_list = list(sonus.keys())
     df0 = pd.DataFrame(index=terrestrial)
     for ii in sonus_list:
-        df_tmp = pd.concat([flow_fortune(ii[0:2]),flow_fortune(ii[2:])], 
+        df_tmp = pd.concat([flow_star_arrange(ii[0:2]),flow_star_arrange(ii[2:])], 
                         axis=1,join='outer',ignore_index=False)
         df0= pd.concat([df0,df_tmp], axis=1, join='outer',ignore_index=False).fillna(' ') 
     return df0 
-    
-dff= flow_table()
+
+
+
+def combine_star(birth, gender):
+    df0 = pd.DataFrame.from_dict(life_profile_loc(birth), orient='index').rename(columns={0:'宮位'})
+    c_star, cc_star = permute_star(birth)
+    c_star,cc_star  = add_level(c_star),add_level(cc_star)
+    total=dict()
+    for jj in set(c_star)|set(cc_star):
+        if jj in c_star and jj in cc_star:
+            total[jj] = [c_star[jj], cc_star[jj]]
+        elif jj in c_star:
+            total[jj] = c_star[jj]
+        else:
+            total[jj] = cc_star[jj]
+    total= convert_list_br(total)
+    df1 = pd.Series(total); 
+    df1.name  = '主星'
+
+
+    #副星1
+    good_stars = {'年干':['天魁','天鉞','祿存'], '年支':['天馬'] ,'時':['文昌','文曲'], '月':['左輔','右弼']}
+    bad_stars = {'年干':['擎羊','陀羅','截空'], '年支':['火星','鈴星'], '月':['天空','地劫']}
+    star_g = permute_minor(birth, good_stars, name='吉星')
+    star_b = permute_minor(birth, bad_stars, name='凶星')
+
+
+    # 長生12神煞
+    df2 = pd.Series(life_cycle(birth, gender)); df2.name='神煞'
+    df0 = pd.merge(left=df0, right=df2, how='left', left_index=True, right_index=True)
+    df = pd.merge(left=df0, right=df1, how='left', left_index=True, right_index=True).fillna(' ')
+    df = pd.concat([df,star_g, star_b], axis=1, join='inner', ignore_index=False)
+    return df
