@@ -37,22 +37,4 @@ print(tabulate(Z,tablefmt='psql'))
 
 
 
-
-
-
-#%%
-#flow_year = list(flow_table().columns)
-#.index('戊子')
-
-# def flow_span(year):
-#     """
-#     流年
-#     """
-#     pass
-#next( (start1[jj] for jj in start1.keys() if re.match(jj,'命')))
-#test = flow_table()['壬戌']    
-#result = pd.merge(left=Z, right=test, 
-# how='left', left_index=True, right_index=True)
-
-
-# %%
+ 
