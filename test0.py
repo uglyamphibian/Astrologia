@@ -9,31 +9,12 @@ import re
 
  
 
-ex = life_dict['楊貴妃']
-Z = combine_star(ex,'f')
- 
-#v = combine_flow(ex,'m',42)
-#print(v)
-#
-#print(tabulate(v,tablefmt='psql'))
-#u = combine_flow(ex, 'm', 67)
-#pprint(tabulate(u,tablefmt='psql'))
-#print(tabulate(u, tablefmt='simple'))
+ex = life_dict2['俞欣榮']
+Z = combine_star(ex,'m')
+Z2 = combine_flow(ex,'m', 38)
 print('\n========================\n')
-print(tabulate(Z,tablefmt='psql'))
+print(tabulate(Z2,tablefmt='psql'))
 #u = combine_flow(ex, 'm', 67)
-
-
-
-# for jj in v:
-#     if isinstance(jj,list):
-#             new_txt = '\n'.join(jj)
-#     else:
-#             new_txt = jj
-#     print(new_txt)
-    
-
-
 
 
 
